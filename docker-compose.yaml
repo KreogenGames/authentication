@@ -9,3 +9,6 @@ services:
       POSTGRES_PASSWORD: 143018h
     ports:
       - "5432:5432"
+
+#   migrate -path ./migrations -database 'postgres://postgres:143018h@localhost:5432/postgres?sslmode=disable' up
+#   migrate -path ./migrations -database 'postgres://postgres:143018h@localhost:5432/postgres?sslmode=disable' down

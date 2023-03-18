@@ -21,7 +21,8 @@ func NewUsersStorage(pool *pgxpool.Pool) *UsersStorage {
 }
 
 func (storage *UsersStorage) CreateUser(user models.User) error {
-	query := "INSERT INTO users(password, lastName, firstName, middleName, phoneNumber) VALUES ($1, $2, $3, $4, $5) WHERE email = $6"
+	// query := "INSERT INTO users (password, lastName, firstName, middleName, phoneNumber) VALUES ($1, $2, $3, $4, $5) WHERE email = $6"
+	query := "UPDATE users SET password = $1, lastName = $2, firstName = $3, middleName = $4, phoneNumber = $5 WHERE email = $6"
 
 	_, err := storage.databasePool.Exec(context.Background(), query, user.Password, user.LastName, user.FirstName, user.MiddleName, user.PhoneNumber, user.Email)
 
@@ -30,7 +31,7 @@ func (storage *UsersStorage) CreateUser(user models.User) error {
 		return err
 	}
 
-	return err
+	return nil
 }
 
 func (storage *UsersStorage) GetUserById(id int64) models.User {
@@ -82,7 +83,7 @@ func (storage *UsersStorage) GetUsersListByLastName(lastNameFilter string) []mod
 	return result
 }
 
-func (storage *UsersStorage) UpdateUserPass(newPass string, id int64) error {
+func (storage *UsersStorage) UpdateUserPass(newPass string, email string) error {
 	ctx := context.Background()
 	tx, err := storage.databasePool.Begin(ctx)
 
@@ -93,9 +94,9 @@ func (storage *UsersStorage) UpdateUserPass(newPass string, id int64) error {
 		}
 	}()
 
-	updateQuery := "UPDATE users SET password = $1 WHERE id = $2"
+	updateQuery := "UPDATE users SET password = $1 WHERE email = $2"
 
-	_, err = tx.Exec(ctx, updateQuery, newPass, id)
+	_, err = tx.Exec(ctx, updateQuery, newPass, email)
 
 	if err != nil {
 		log.Errorln(err)

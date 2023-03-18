@@ -22,7 +22,7 @@ func LoadAndStoreConfig() Cfg {
 	v.SetDefault("PORT", "8080")
 	v.SetDefault("DBUSER", "postgres")
 	v.SetDefault("DBPASS", "143018h")
-	v.SetDefault("DBHOST", "") //localhost
+	v.SetDefault("DBHOST", "localhost") //localhost
 	v.SetDefault("DBPORT", "5432")
 	v.SetDefault("DBNAME", "postgres")
 	v.AutomaticEnv()
