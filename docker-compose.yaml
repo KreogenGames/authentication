@@ -5,10 +5,35 @@ services:
   relational-db:
     image: postgres
     restart: always
+    # networks:
+    #   new:
+    #     aliases:
+    #       - database
     environment:
-      POSTGRES_PASSWORD: 143018h
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "143018h"
     ports:
       - "5432:5432"
+    volumes:
+      - relational-db:/var/lib/postgres
+
+volumes:
+  relational-db:
+#   migrate:
+#         image: migrate/migrate
+#         networks:
+#             - new
+#         volumes:
+#             - .:/migrations
+#         command: ["-path", "/migrations", "-database",  "postgres://postgres:143018h@localhost:5432/postgres?sslmode=disable", "up", "1"]
+#         links: 
+#             - relational-db
+#         depends_on:
+#             - relational-db
+# networks:
+#       new:
 
 #   migrate -path ./migrations -database 'postgres://postgres:143018h@localhost:5432/postgres?sslmode=disable' up
 #   migrate -path ./migrations -database 'postgres://postgres:143018h@localhost:5432/postgres?sslmode=disable' down
+#   docker run -v D:/Универ/Диплом/"ElectroStudent(back)"/authentication/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database "postgres://postgres:143018h@localhost:5432/postgres?sslmode=disable" up 1

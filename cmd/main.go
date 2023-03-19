@@ -4,9 +4,10 @@ import (
 	"context"
 	"electro_student/auth/internals/app"
 	"electro_student/auth/internals/cfg"
-	"log"
 	"os"
 	"os/signal"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {

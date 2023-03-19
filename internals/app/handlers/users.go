@@ -5,6 +5,7 @@ import (
 	"electro_student/auth/internals/app/processors"
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -77,6 +78,7 @@ func (handler *UsersHandler) Find(w http.ResponseWriter, r *http.Request) {
 
 func (handler *UsersHandler) FindUserByEmail(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
+	log.Println(vars["email"])
 	if vars["email"] == "" {
 		WrapError(w, errors.New("missing email"))
 		return
@@ -98,9 +100,9 @@ func (handler *UsersHandler) FindUserByEmail(w http.ResponseWriter, r *http.Requ
 	WrapOK(w, m)
 }
 
-func (handler *UsersHandler) ListByLastName(w http.ResponseWriter, r *http.Request) {
+func (handler *UsersHandler) List(w http.ResponseWriter, r *http.Request) {
 	vars := r.URL.Query()
-	list, err := handler.processor.ListByLastName(strings.Trim(vars.Get("lastName"), "\""))
+	list, err := handler.processor.ListUsers(strings.Trim(vars.Get("email"), "\""), strings.Trim(vars.Get("lastName"), "\""), strings.Trim(vars.Get("firstName"), "\""), strings.Trim(vars.Get("middleName"), "\""))
 
 	if err != nil {
 		WrapError(w, err)

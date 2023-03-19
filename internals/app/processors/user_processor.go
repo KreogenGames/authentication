@@ -18,7 +18,7 @@ func NewUsersProcessor(storage *db.UsersStorage) *UsersProcessor {
 }
 
 func (processor *UsersProcessor) CreateUser(user models.User) error {
-	if user.Password == "" {
+	if user.Hashed_Pass == "" {
 		return errors.New("password should not be empty")
 	}
 	if user.LastName == "" {
@@ -52,8 +52,8 @@ func (processor *UsersProcessor) FindUserByEmail(email string) (models.User, err
 	return user, nil
 }
 
-func (processor *UsersProcessor) ListByLastName(lastName string) ([]models.User, error) {
-	return processor.storage.GetUsersListByLastName(lastName), nil
+func (processor *UsersProcessor) ListUsers(email string, lastName string, firstName string, middleName string) ([]models.User, error) {
+	return processor.storage.GetUsersList(email, lastName, firstName, middleName), nil
 }
 
 func (processor *UsersProcessor) UpdateUserPass(email string, newPass string) error {

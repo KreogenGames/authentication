@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS "users" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
-    "password" TEXT,
-    "lastName" TEXT,
-    "firstName" TEXT,
-    "middleName" TEXT,
+    "hashed_pass" varchar(30),
+    "lastName" varchar(50),
+    "firstName" varchar(50),
+    "middleName" varchar(50),
     "phoneNumber" TEXT,
 	"role" INTEGER NOT NULL DEFAULT 0,
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")

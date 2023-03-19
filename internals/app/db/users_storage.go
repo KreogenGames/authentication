@@ -22,9 +22,9 @@ func NewUsersStorage(pool *pgxpool.Pool) *UsersStorage {
 
 func (storage *UsersStorage) CreateUser(user models.User) error {
 	// query := "INSERT INTO users (password, lastName, firstName, middleName, phoneNumber) VALUES ($1, $2, $3, $4, $5) WHERE email = $6"
-	query := "UPDATE users SET password = $1, lastName = $2, firstName = $3, middleName = $4, phoneNumber = $5 WHERE email = $6"
+	query := `UPDATE users SET "hashed_pass" = $1, "lastName" = $2, "firstName" = $3, "middleName" = $4, "phoneNumber" = $5 WHERE "email" = $6`
 
-	_, err := storage.databasePool.Exec(context.Background(), query, user.Password, user.LastName, user.FirstName, user.MiddleName, user.PhoneNumber, user.Email)
+	_, err := storage.databasePool.Exec(context.Background(), query, user.Hashed_Pass, user.LastName, user.FirstName, user.MiddleName, user.PhoneNumber, user.Email)
 
 	if err != nil {
 		log.Errorln(err)
@@ -35,7 +35,7 @@ func (storage *UsersStorage) CreateUser(user models.User) error {
 }
 
 func (storage *UsersStorage) GetUserById(id int64) models.User {
-	query := "SELECT * FROM user WHERE id = $1"
+	query := `SELECT id, "email", "hashed_pass", "lastName", "firstName", "middleName", "phoneNumber" FROM users WHERE id = $1`
 
 	var result models.User
 
@@ -49,7 +49,7 @@ func (storage *UsersStorage) GetUserById(id int64) models.User {
 }
 
 func (storage *UsersStorage) GetUserByEmail(email string) models.User {
-	query := "SELECT * FROM user WHERE email = $1"
+	query := `SELECT id, "email", "hashed_pass", "lastName", "firstName", "middleName", "phoneNumber" FROM users WHERE "email" = $1`
 
 	var result models.User
 
@@ -62,14 +62,31 @@ func (storage *UsersStorage) GetUserByEmail(email string) models.User {
 	return result
 }
 
-func (storage *UsersStorage) GetUsersListByLastName(lastNameFilter string) []models.User {
-	query := "SELECT email, lastName, firstName, middleName, phoneNumber FROM users"
+func (storage *UsersStorage) GetUsersList(email string, lastName string, firstName string, middleName string) []models.User {
+	query := `SELECT id, "email", "hashed_pass", "lastName", "firstName", "middleName", "phoneNumber" FROM users WHERE 1=1`
 
+	placeholderNum := 1
 	args := make([]interface{}, 0)
 
-	if lastNameFilter != "" {
-		query += " WHERE lastName LIKE $1"
-		args = append(args, fmt.Sprintf("%%%s%%", lastNameFilter))
+	if email != "" {
+		query += fmt.Sprintf(` AND "email" ILIKE $%d`, placeholderNum)
+		args = append(args, fmt.Sprintf("%%%s%%", email))
+		placeholderNum++
+	}
+	if lastName != "" {
+		query += fmt.Sprintf(` AND "lastName" ILIKE $%d`, placeholderNum)
+		args = append(args, fmt.Sprintf("%%%s%%", lastName))
+		placeholderNum++
+	}
+	if firstName != "" {
+		query += fmt.Sprintf(` AND "firstName" ILIKE $%d`, placeholderNum)
+		args = append(args, fmt.Sprintf("%%%s%%", firstName))
+		placeholderNum++
+	}
+	if middleName != "" {
+		query += fmt.Sprintf(` AND "middleName" ILIKE $%d`, placeholderNum)
+		args = append(args, fmt.Sprintf("%%%s%%", middleName))
+		placeholderNum++
 	}
 
 	var result []models.User
@@ -94,7 +111,7 @@ func (storage *UsersStorage) UpdateUserPass(newPass string, email string) error 
 		}
 	}()
 
-	updateQuery := "UPDATE users SET password = $1 WHERE email = $2"
+	updateQuery := `UPDATE users SET "hashed_pass" = $1 WHERE "email" = $2`
 
 	_, err = tx.Exec(ctx, updateQuery, newPass, email)
 
