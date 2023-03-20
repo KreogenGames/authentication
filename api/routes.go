@@ -6,11 +6,13 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func CreateRoutes(userHandler *handlers.UsersHandler) *mux.Router {
+func CreateRoutes(userHandler *handlers.UsersHandler, gradesHandler *handlers.GradesHandler) *mux.Router {
 
 	r := mux.NewRouter()
 
 	r.HandleFunc("/users/create", userHandler.Create).Methods("POST")
+
+	r.HandleFunc("/grades/create", gradesHandler.Create).Methods("POST")
 
 	r.HandleFunc("/users/list", userHandler.List).Methods("GET")
 

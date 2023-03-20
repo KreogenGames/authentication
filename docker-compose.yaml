@@ -36,4 +36,4 @@ volumes:
 
 #   migrate -path ./migrations -database 'postgres://postgres:143018h@localhost:5432/postgres?sslmode=disable' up
 #   migrate -path ./migrations -database 'postgres://postgres:143018h@localhost:5432/postgres?sslmode=disable' down
-#   docker run -v D:/Универ/Диплом/"ElectroStudent(back)"/authentication/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database "postgres://postgres:143018h@localhost:5432/postgres?sslmode=disable" up 1
+#   
