@@ -23,6 +23,31 @@ func NewUsersHandler(processor *processors.UsersProcessor) *UsersHandler {
 	return handler
 }
 
+func (handler *UsersHandler) Add(w http.ResponseWriter, r *http.Request) {
+	var newUser models.User
+
+	err := json.NewDecoder(r.Body).Decode(&newUser)
+
+	if err != nil {
+		WrapError(w, err)
+		return
+	}
+
+	err = handler.processor.AddNewUser(newUser)
+
+	if err != nil {
+		WrapError(w, err)
+		return
+	}
+
+	var m = map[string]interface{}{
+		"result": "OK",
+		"data":   "",
+	}
+
+	WrapOK(w, m)
+}
+
 func (handler *UsersHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var newUser models.User
 
