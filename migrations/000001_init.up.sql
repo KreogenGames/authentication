@@ -1,3 +1,12 @@
+CREATE TABLE IF NOT EXISTS "roles" (
+    "id" INTEGER NOT NULL UNIQUE,
+    "role_name" varchar(20) NOT NULL UNIQUE,
+    "access_level" INTEGER NOT NULL,
+    CONSTRAINT "roles_pkey" PRIMARY KEY ("id")
+);
+
+alter table roles owner to postgres;
+
 CREATE TABLE IF NOT EXISTS "users" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL UNIQUE,
@@ -6,7 +15,7 @@ CREATE TABLE IF NOT EXISTS "users" (
     "firstName" varchar(50),
     "middleName" varchar(50),
     "phoneNumber" TEXT,
-	"role" INTEGER NOT NULL DEFAULT 0, -- В будущем создать таблицу под роли
+	"role" INTEGER NOT NULL REFERENCES roles (id) DEFAULT 0,
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
@@ -27,8 +36,12 @@ alter table grades owner to postgres;
 
 -- create unique index grades_id_uindex on grades (id)
 
-insert into public.users (email, role) values ('sibgatulov@gmail.com', 5);
-insert into public.users (email) values ('ertek.h.i@edu.mirea.ru');
+insert into public.roles (id, role_name, access_level) values (0, 'user', 0);
+insert into public.roles (id, role_name, access_level) values (1, 'admin', 10);
+insert into public.roles (id, role_name, access_level) values (2, 'student', 1);
+
+insert into public.users (email, role) values ('sibgatulov@gmail.com', 1);
+insert into public.users (email, role) values ('ertek.h.i@edu.mirea.ru', 2);
 insert into public.users (email) values ('sibgatulov@mirea.ru');
 insert into public.users (email) values ('monakov.a.v@edu.mirea.ru');
 

@@ -14,7 +14,7 @@ services:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "143018h"
     ports:
-      - "5432:5432"
+      - "5436:5432"
     volumes:
       - relational-db:/var/lib/postgres
 
@@ -34,6 +34,6 @@ volumes:
 # networks:
 #       new:
 
-#   migrate -path ./migrations -database 'postgres://postgres:143018h@localhost:5432/postgres?sslmode=disable' up
-#   migrate -path ./migrations -database 'postgres://postgres:143018h@localhost:5432/postgres?sslmode=disable' down
+#   migrate -path ./migrations -database 'postgres://postgres:143018h@localhost:5436/postgres?sslmode=disable' up
+#   migrate -path ./migrations -database 'postgres://postgres:143018h@localhost:5436/postgres?sslmode=disable' down
 #   

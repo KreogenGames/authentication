@@ -17,6 +17,17 @@ func NewUsersProcessor(storage *db.UsersStorage) *UsersProcessor {
 	return processor
 }
 
+func (proccessor *UsersProcessor) AddNewUser(newUser models.User /*, roleAccesLevel int*/) error {
+	// if roleAccesLevel != 10 {
+	// 	return errors.New("only admin can add new users")
+	// }
+	if newUser.Email == "" {
+		return errors.New("email should not be empty")
+	}
+
+	return proccessor.storage.AddNewUser(newUser)
+}
+
 func (processor *UsersProcessor) CreateUser(user models.User) error {
 	if user.Hashed_Pass == "" {
 		return errors.New("password should not be empty")

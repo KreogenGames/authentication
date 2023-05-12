@@ -20,6 +20,19 @@ func NewUsersStorage(pool *pgxpool.Pool) *UsersStorage {
 	return storage
 }
 
+func (storage *UsersStorage) AddNewUser(newUser models.User) error {
+	query := `INSERT INTO users (email, role) VALUES ($1, $2)`
+
+	_, err := storage.databasePool.Exec(context.Background(), query, newUser.Email, newUser.Role)
+
+	if err != nil {
+		log.Errorln(err)
+		return err
+	}
+
+	return nil
+}
+
 func (storage *UsersStorage) CreateUser(user models.User) error {
 	// query := "INSERT INTO users (password, lastName, firstName, middleName, phoneNumber) VALUES ($1, $2, $3, $4, $5) WHERE email = $6"
 	query := `UPDATE users SET "hashed_pass" = $1, "lastName" = $2, "firstName" = $3, "middleName" = $4, "phoneNumber" = $5 WHERE "email" = $6`
