@@ -10,9 +10,9 @@ func CreateRoutes(userHandler *handlers.UsersHandler, gradesHandler *handlers.Gr
 
 	r := mux.NewRouter()
 
-	r.HandleFunc("/users/create", userHandler.Create).Methods("POST")
+	r.HandleFunc("/admin/add", userHandler.AddNewUser).Methods("POST")
 
-	r.HandleFunc("/grades/create", gradesHandler.Create).Methods("POST")
+	r.HandleFunc("/users/create", userHandler.Create).Methods("POST")
 
 	r.HandleFunc("/users/list", userHandler.List).Methods("GET")
 

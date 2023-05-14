@@ -1,9 +1,11 @@
 package processors
 
 import (
+	"crypto/sha256"
 	"electro_student/auth/internals/app/db"
 	"electro_student/auth/internals/app/models"
 	"errors"
+	"fmt"
 	"strings"
 )
 
@@ -17,15 +19,27 @@ func NewUsersProcessor(storage *db.UsersStorage) *UsersProcessor {
 	return processor
 }
 
-func (proccessor *UsersProcessor) AddNewUser(newUser models.User /*, roleAccesLevel int*/) error {
-	// if roleAccesLevel != 10 {
-	// 	return errors.New("only admin can add new users")
-	// }
-	if newUser.Email == "" {
+const salt = "jhfioejf8653oasdsdakjv4312"
+
+func (processor *UsersProcessor) GeneratePasswordHash(password string) string {
+	hash := sha256.New()
+	hash.Write([]byte(password))
+
+	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
+}
+
+func (proccessor *UsersProcessor) AddNewUser(user models.User) error {
+	if user.Email == "" {
 		return errors.New("email should not be empty")
 	}
+	if strings.Contains(user.Email, "@[a-z].[a-z]") == false {
+		return errors.New("wrong email format")
+	}
+	if user.Role < 0 || user.Role > 2 {
+		return errors.New("missing role id")
+	}
 
-	return proccessor.storage.AddNewUser(newUser)
+	return proccessor.storage.AddNewUser(user)
 }
 
 func (processor *UsersProcessor) CreateUser(user models.User) error {
@@ -41,6 +55,8 @@ func (processor *UsersProcessor) CreateUser(user models.User) error {
 	if strings.Contains(user.Email, "@edu.mirea.ru") == false && strings.Contains(user.Email, "@mirea.ru") == false {
 		return errors.New("email must be in @edu.mirea.ru or @mirea.ru domain")
 	}
+
+	user.Hashed_Pass = processor.GeneratePasswordHash(user.Hashed_Pass)
 
 	return processor.storage.CreateUser(user)
 }
@@ -68,6 +84,8 @@ func (processor *UsersProcessor) ListUsers(email string, lastName string, firstN
 }
 
 func (processor *UsersProcessor) UpdateUserPass(email string, newPass string) error {
+	newPass = processor.GeneratePasswordHash(newPass)
+
 	err := processor.storage.UpdateUserPass(newPass, email)
 	if err != nil {
 		return errors.New("password not changed")

@@ -23,7 +23,7 @@ func NewUsersHandler(processor *processors.UsersProcessor) *UsersHandler {
 	return handler
 }
 
-func (handler *UsersHandler) Add(w http.ResponseWriter, r *http.Request) {
+func (handler *UsersHandler) AddNewUser(w http.ResponseWriter, r *http.Request) {
 	var newUser models.User
 
 	err := json.NewDecoder(r.Body).Decode(&newUser)
