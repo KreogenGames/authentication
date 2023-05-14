@@ -109,7 +109,7 @@ func (handler *UsersHandler) FindUserByEmail(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	email := string(vars["email"])
+	email := vars["email"]
 
 	user, err := handler.processor.FindUserByEmail(email)
 	if err != nil {
@@ -137,6 +137,38 @@ func (handler *UsersHandler) List(w http.ResponseWriter, r *http.Request) {
 	var m = map[string]interface{}{
 		"result": "OK",
 		"data":   list,
+	}
+
+	WrapOK(w, m)
+}
+
+func (handler *UsersHandler) UpdateUserPass(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	if vars["email"] == "" {
+		WrapError(w, errors.New("missing email"))
+		return
+	}
+
+	email := vars["email"]
+
+	if vars["hashed_pass"] == "" {
+		WrapError(w, errors.New("missing new password"))
+		return
+	}
+
+	newPass := vars["hashed_pass"]
+
+	err := handler.processor.UpdateUserPass(email, newPass)
+
+	if err != nil {
+		WrapError(w, err)
+		return
+	}
+
+	var m = map[string]interface{}{
+		"result": "OK",
+		"data":   "",
 	}
 
 	WrapOK(w, m)

@@ -32,7 +32,7 @@ func (proccessor *UsersProcessor) AddNewUser(user models.User) error {
 	if user.Email == "" {
 		return errors.New("email should not be empty")
 	}
-	if strings.Contains(user.Email, "@[a-z].[a-z]") == false {
+	if strings.ContainsAny(user.Email, "@.") == false {
 		return errors.New("wrong email format")
 	}
 	if user.Role < 0 || user.Role > 2 {
@@ -72,6 +72,7 @@ func (processor *UsersProcessor) FindUser(id int64) (models.User, error) {
 
 func (processor *UsersProcessor) FindUserByEmail(email string) (models.User, error) {
 	user := processor.storage.GetUserByEmail(email)
+
 	if user.Email != email {
 		return user, errors.New("user not found")
 	}

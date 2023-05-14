@@ -21,49 +21,50 @@ func NewUsersStorage(pool *pgxpool.Pool) *UsersStorage {
 }
 
 func (storage *UsersStorage) AddNewUser(newUser models.User) error {
-	ctx := context.Background()
-	tx, err := storage.databasePool.Begin(ctx)
-	defer func() {
-		err = tx.Rollback(context.Background())
-		if err != nil {
-			log.Errorln(err)
-		}
-	}()
+	// ctx := context.Background()
+	// tx, err := storage.databasePool.Begin(ctx)
+	// defer func() {
+	// 	err = tx.Rollback(context.Background())
+	// 	if err != nil {
+	// 		log.Errorln(err)
+	// 	}
+	// }()
 
-	searchQuery := `SELECT email FROM users WHERE email = $1`
+	// searchQuery := `SELECT email FROM users WHERE email = $1`
 
-	email := ""
+	// email := ""
 
-	err = pgxscan.Get(ctx, tx, &email, searchQuery, newUser.Email)
+	// err = pgxscan.Get(ctx, tx, &email, searchQuery, newUser.Email)
+
+	// if err != nil {
+	// 	log.Errorln(err)
+	// 	err = tx.Rollback(context.Background())
+	// 	if err != nil {
+	// 		log.Errorln(err)
+	// 	}
+	// 	return err
+	// }
+
+	insertQuery := `INSERT INTO users (email, role) VALUES ($1, $2)`
+
+	_, err := storage.databasePool.Exec(context.Background(), insertQuery, newUser.Email, newUser.Role)
+
+	// if err != nil {
+	// 	log.Errorln(err)
+	// 	err = tx.Rollback(context.Background())
+	// 	if err != nil {
+	// 		log.Errorln(err)
+	// 	}
+	// 	return err
+	// }
+	// err = tx.Commit(context.Background())
 
 	if err != nil {
 		log.Errorln(err)
-		err = tx.Rollback(context.Background())
-		if err != nil {
-			log.Errorln(err)
-		}
 		return err
 	}
 
-	insertQuery := `INSERT INTO users(email, role) VALUES ($1, $2)`
-
-	_, err = tx.Exec(ctx, insertQuery, newUser.Email, newUser.Role)
-
-	if err != nil {
-		log.Errorln(err)
-		err = tx.Rollback(context.Background())
-		if err != nil {
-			log.Errorln(err)
-		}
-		return err
-	}
-	err = tx.Commit(context.Background())
-
-	if err != nil {
-		log.Errorln(err)
-	}
-
-	return err
+	return nil
 }
 
 func (storage *UsersStorage) CreateUser(user models.User) error {

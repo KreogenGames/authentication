@@ -10,7 +10,7 @@ alter table roles owner to postgres;
 CREATE TABLE IF NOT EXISTS "users" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL UNIQUE,
-    "hashed_pass" varchar(30) UNIQUE,
+    "hashed_pass" varchar(255) UNIQUE,
     "lastName" varchar(50),
     "firstName" varchar(50),
     "middleName" varchar(50),
