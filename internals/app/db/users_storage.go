@@ -96,7 +96,7 @@ func (storage *UsersStorage) GetUserById(id int64) models.User {
 }
 
 func (storage *UsersStorage) GetUserByEmail(email string) models.User {
-	query := `SELECT id, "email", "hashed_pass", "lastName", "firstName", "middleName", "phoneNumber" FROM users WHERE "email" = $1`
+	query := `SELECT * FROM users WHERE "email" = $1`
 
 	var result models.User
 
@@ -148,30 +148,30 @@ func (storage *UsersStorage) GetUsersList(email string, lastName string, firstNa
 }
 
 func (storage *UsersStorage) UpdateUserPass(newPass string, email string) error {
-	ctx := context.Background()
-	tx, err := storage.databasePool.Begin(ctx)
+	// ctx := context.Background()
+	// tx, err := storage.databasePool.Begin(ctx)
 
-	defer func() {
-		err = tx.Rollback(context.Background())
-		if err != nil {
-			log.Errorln(err)
-		}
-	}()
+	// defer func() {
+	// 	err = tx.Rollback(context.Background())
+	// 	if err != nil {
+	// 		log.Errorln(err)
+	// 	}
+	// }()
 
-	updateQuery := `UPDATE users SET "hashed_pass" = $1 WHERE "email" = $2`
+	updateQuery := `UPDATE users SET hashed_pass = $1 WHERE email = $2`
 
-	_, err = tx.Exec(ctx, updateQuery, newPass, email)
+	_, err := storage.databasePool.Exec(context.Background(), updateQuery, newPass, email)
 
-	if err != nil {
-		log.Errorln(err)
-		err = tx.Rollback(context.Background())
-		if err != nil {
-			log.Errorln(err)
-		}
-		return err
-	}
+	// if err != nil {
+	// 	log.Errorln(err)
+	// 	err = tx.Rollback(context.Background())
+	// 	if err != nil {
+	// 		log.Errorln(err)
+	// 	}
+	// 	return err
+	// }
 
-	err = tx.Commit(context.Background())
+	// err = tx.Commit(context.Background())
 
 	if err != nil {
 		log.Errorln(err)

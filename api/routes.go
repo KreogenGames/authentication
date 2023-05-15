@@ -16,11 +16,11 @@ func CreateRoutes(userHandler *handlers.UsersHandler, gradesHandler *handlers.Gr
 
 	r.HandleFunc("/users/list", userHandler.List).Methods("GET")
 
-	r.HandleFunc("/users/update/pass", userHandler.List).Methods("PUT")
+	r.HandleFunc("/users/update/pass", userHandler.UpdateUserPass).Methods("PUT")
 
 	r.HandleFunc("/users/find/{id:[0-9]+}", userHandler.Find).Methods("GET")
 
-	r.HandleFunc("/users/find/email}", userHandler.FindUserByEmail).Methods("GET")
+	r.HandleFunc("/users/find/{email}", userHandler.FindUserByEmail).Methods("GET")
 
 	r.NotFoundHandler = r.NewRoute().HandlerFunc(handlers.NotFound).GetHandler()
 
