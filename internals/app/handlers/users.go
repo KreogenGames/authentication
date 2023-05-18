@@ -125,9 +125,24 @@ func (handler *UsersHandler) FindUserByEmail(w http.ResponseWriter, r *http.Requ
 	WrapOK(w, m)
 }
 
-func (handler *UsersHandler) List(w http.ResponseWriter, r *http.Request) {
+func (handler *UsersHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
+	list, err := handler.processor.ListUsers()
+	if err != nil {
+		WrapError(w, err)
+		return
+	}
+
+	var m = map[string]interface{}{
+		"result": "OK",
+		"data":   list,
+	}
+
+	WrapOK(w, m)
+}
+
+func (handler *UsersHandler) ListByParams(w http.ResponseWriter, r *http.Request) {
 	vars := r.URL.Query()
-	list, err := handler.processor.ListUsers(strings.Trim(vars.Get("email"), "\""), strings.Trim(vars.Get("lastName"), "\""), strings.Trim(vars.Get("firstName"), "\""), strings.Trim(vars.Get("middleName"), "\""))
+	list, err := handler.processor.ListUsersByParams(strings.Trim(vars.Get("email"), "\""), strings.Trim(vars.Get("lastName"), "\""), strings.Trim(vars.Get("firstName"), "\""), strings.Trim(vars.Get("middleName"), "\""))
 
 	if err != nil {
 		WrapError(w, err)

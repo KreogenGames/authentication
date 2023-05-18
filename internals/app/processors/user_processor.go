@@ -29,18 +29,17 @@ func (processor *UsersProcessor) GeneratePasswordHash(password string) string {
 }
 
 func (processor *UsersProcessor) AddNewUser(user models.User) error {
-	userChecker := processor.storage.GetUserByEmail(user.Email)
 
 	if user.Email == "" {
 		return errors.New("email should not be empty")
 	}
-	if user.Email == userChecker.Email {
-		return errors.New("user with this email already exists")
-	}
 	if strings.ContainsAny(user.Email, "@.") == false {
 		return errors.New("wrong email format")
 	}
-	if user.Role < 0 || user.Role > 2 {
+	if processor.storage.EmailChecker(user.Email) {
+		return errors.New("user with this email already exists")
+	}
+	if user.Role < 1 || user.Role > 2 {
 		return errors.New("missing role id")
 	}
 
@@ -85,8 +84,12 @@ func (processor *UsersProcessor) FindUserByEmail(email string) (models.User, err
 	return user, nil
 }
 
-func (processor *UsersProcessor) ListUsers(email string, lastName string, firstName string, middleName string) ([]models.User, error) {
-	return processor.storage.GetUsersList(email, lastName, firstName, middleName), nil
+func (processor *UsersProcessor) ListUsers() ([]models.User, error) {
+	return processor.storage.GetUsersList(), nil
+}
+
+func (processor *UsersProcessor) ListUsersByParams(email string, lastName string, firstName string, middleName string) ([]models.User, error) {
+	return processor.storage.GetUsersListByParams(email, lastName, firstName, middleName), nil
 }
 
 func (processor *UsersProcessor) UpdateUserPass(email string, newPass string) error {

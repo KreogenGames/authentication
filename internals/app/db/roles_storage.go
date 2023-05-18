@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"electro_student/auth/internals/app/models"
+	"strings"
 
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -21,6 +22,8 @@ func NewRolesStorage(pool *pgxpool.Pool) *RolesStorage {
 
 func (storage *RolesStorage) AddNewRole(role models.Role) error {
 	insertQuery := `INSERT INTO roles (role_name, access_level) VALUES ($1, $2)`
+
+	role.RoleName = strings.ToLower(role.RoleName)
 
 	_, err := storage.databasePool.Exec(context.Background(), insertQuery, role.RoleName, role.AccessLevel)
 
