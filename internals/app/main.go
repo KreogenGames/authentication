@@ -39,15 +39,18 @@ func (server *Server) Serve() {
 	}
 
 	usersStorage := db.NewUsersStorage(server.db)
+	rolesStorage := db.NewRolesStorage(server.db)
 	gradesStorage := db.NewGradesStorage(server.db)
 
 	usersProcessor := processors.NewUsersProcessor(usersStorage)
+	rolesProcessor := processors.NewRolesProcessor(rolesStorage)
 	gradesProcessor := processors.NewGradesProcessor(gradesStorage)
 
 	userHandler := handlers.NewUsersHandler(usersProcessor)
+	rolesHandler := handlers.NewRolesHandler(rolesProcessor)
 	gradesHandler := handlers.NewGradesHandler(gradesProcessor)
 
-	routes := api.CreateRoutes(userHandler, gradesHandler)
+	routes := api.CreateRoutes(userHandler, rolesHandler, gradesHandler)
 	routes.Use(middleware.RequestLog)
 
 	server.srv = &http.Server{
