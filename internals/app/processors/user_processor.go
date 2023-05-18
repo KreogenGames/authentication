@@ -28,9 +28,14 @@ func (processor *UsersProcessor) GeneratePasswordHash(password string) string {
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
 }
 
-func (proccessor *UsersProcessor) AddNewUser(user models.User) error {
+func (processor *UsersProcessor) AddNewUser(user models.User) error {
+	userChecker := processor.storage.GetUserByEmail(user.Email)
+
 	if user.Email == "" {
 		return errors.New("email should not be empty")
+	}
+	if user.Email == userChecker.Email {
+		return errors.New("user with this email already exists")
 	}
 	if strings.ContainsAny(user.Email, "@.") == false {
 		return errors.New("wrong email format")
@@ -39,7 +44,7 @@ func (proccessor *UsersProcessor) AddNewUser(user models.User) error {
 		return errors.New("missing role id")
 	}
 
-	return proccessor.storage.AddNewUser(user)
+	return processor.storage.AddNewUser(user)
 }
 
 func (processor *UsersProcessor) CreateUser(user models.User) error {

@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS "roles" (
-    "id" INTEGER NOT NULL UNIQUE,
+    "id" SERIAL NOT NULL,
     "role_name" varchar(20) NOT NULL UNIQUE,
     "access_level" INTEGER NOT NULL,
     CONSTRAINT "roles_pkey" PRIMARY KEY ("id")
@@ -36,9 +36,9 @@ alter table grades owner to postgres;
 
 -- create unique index grades_id_uindex on grades (id)
 
-insert into public.roles (id, role_name, access_level) values (0, 'user', 0);
-insert into public.roles (id, role_name, access_level) values (1, 'admin', 10);
-insert into public.roles (id, role_name, access_level) values (2, 'student', 1);
+insert into public.roles (role_name, access_level) values ('user', 0);
+insert into public.roles (role_name, access_level) values ('admin', 10);
+insert into public.roles (role_name, access_level) values ('student', 1);
 
 insert into public.users (email, role) values ('sibgatulov@gmail.com', 1);
 insert into public.users (email, role) values ('ertek.h.i@edu.mirea.ru', 2);
