@@ -40,7 +40,7 @@ insert into public.roles (role_name, access_level) values ('user', 0);
 insert into public.roles (role_name, access_level) values ('admin', 10);
 insert into public.roles (role_name, access_level) values ('student', 1);
 
--- insert into public.users (email, role) values ('sibgatulov@gmail.com', 1);
+insert into public.users (email, role) values ('sibgatulov@gmail.com', 1);
 insert into public.users (email, role) values ('ertek.h.i@edu.mirea.ru', 2);
 
 -- insert into public.grades (teacher_id, discipline, student_id, grade) values (3, 'ОСТ', 2, 3);

@@ -17,19 +17,14 @@ func NewGradesProcessor(storage *db.GradesStorage) *GradesProcessor {
 }
 
 func (processor *GradesProcessor) CreateGrade(grade models.Grade) error {
-	if grade.Teacher.Id <= 0 {
-		return errors.New("teacher id shall be filled")
-	}
 
+	if !processor.storage.StudentAndTeacherChecker(grade) {
+		return errors.New("teacher or student with such id's not founded")
+	}
 	if grade.Discipline == "" {
 		return errors.New("discipline should not be empty")
 	}
-
-	if grade.Student.Id <= 0 {
-		return errors.New("student id shall be filled")
-	}
-
-	if grade.Grade <= 0 || grade.Grade >= 5 {
+	if grade.Grade <= 0 || grade.Grade > 5 {
 		return errors.New("grade must be in range from 0 to 5")
 	}
 

@@ -33,7 +33,7 @@ func (processor *UsersProcessor) AddNewUser(user models.User) error {
 	if user.Email == "" {
 		return errors.New("email should not be empty")
 	}
-	if strings.ContainsAny(user.Email, "@.") == false {
+	if !strings.ContainsAny(user.Email, "@.") {
 		return errors.New("wrong email format")
 	}
 	if processor.storage.EmailChecker(user.Email) {
@@ -56,7 +56,7 @@ func (processor *UsersProcessor) CreateUser(user models.User) error {
 	if user.FirstName == "" {
 		return errors.New("user's firstName should not be empty")
 	}
-	if strings.Contains(user.Email, "@edu.mirea.ru") == false && strings.Contains(user.Email, "@mirea.ru") == false {
+	if !strings.Contains(user.Email, "@edu.mirea.ru") && !strings.Contains(user.Email, "@mirea.ru") {
 		return errors.New("email must be in @edu.mirea.ru or @mirea.ru domain")
 	}
 
