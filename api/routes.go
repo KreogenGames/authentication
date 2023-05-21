@@ -32,6 +32,8 @@ func CreateRoutes(userHandler *handlers.UsersHandler, roleHandler *handlers.Role
 
 	r.HandleFunc("/disciplines/disciplineid/grades", gradesHandler.Create).Methods("POST")
 
+	r.HandleFunc("/disciplines/list/grades", gradesHandler.List).Methods("GET")
+
 	r.NotFoundHandler = r.NewRoute().HandlerFunc(handlers.NotFound).GetHandler()
 
 	return r

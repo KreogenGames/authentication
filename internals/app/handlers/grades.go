@@ -5,6 +5,8 @@ import (
 	"electro_student/auth/internals/app/processors"
 	"encoding/json"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 type GradesHandler struct {
@@ -35,6 +37,32 @@ func (handler *GradesHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var m = map[string]interface{}{
 		"result": "OK",
 		"data":   "",
+	}
+
+	WrapOK(w, m)
+}
+
+func (handler *GradesHandler) List(w http.ResponseWriter, r *http.Request) {
+	vars := r.URL.Query()
+	var gradeFilter int64 = 0
+	if vars.Get("grade") != "" {
+		var err error
+		gradeFilter, err = strconv.ParseInt(vars.Get("grade"), 10, 64)
+		if err != nil {
+			WrapError(w, err)
+			return
+		}
+	}
+	list, err := handler.processor.ListGrades(strings.Trim(vars.Get("studentEmail"), "\""), strings.Trim(vars.Get("discipline"), "\""), gradeFilter)
+
+	if err != nil {
+		WrapError(w, err)
+		return
+	}
+
+	var m = map[string]interface{}{
+		"result": "OK",
+		"data":   list,
 	}
 
 	WrapOK(w, m)

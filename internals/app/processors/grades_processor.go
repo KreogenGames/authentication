@@ -30,3 +30,7 @@ func (processor *GradesProcessor) CreateGrade(grade models.Grade) error {
 
 	return processor.storage.CreateGrade(grade)
 }
+
+func (processor *GradesProcessor) ListGrades(studentEmailFilter string, disciplineFilter string, gradeFilter int64) ([]models.Grade, error) {
+	return processor.storage.GetGradesList(studentEmailFilter, disciplineFilter, gradeFilter), nil
+}
