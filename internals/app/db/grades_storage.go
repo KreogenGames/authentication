@@ -14,41 +14,41 @@ type GradesStorage struct {
 	databasePool *pgxpool.Pool
 }
 
-type userGrade struct {
-	TeacherId         int64 `json:"teacher_id" db:"teacher_id"`
-	TeacherEmail      string
-	TeacherLastName   string
-	TeacherFirstName  string
-	TeacherMiddleName string
-	Discipline        string
-	StudentId         int64 `json:"student_id" db:"student_id"`
-	StudentEmail      string
-	StudentLastName   string
-	StudentFirstName  string
-	StudentMiddleName string
-	Grade             int64
-}
+// type userGrade struct {
+// 	TeacherId         int64 `json:"teacher_id" db:"teacher_id"`
+// 	TeacherEmail      string
+// 	TeacherLastName   string
+// 	TeacherFirstName  string
+// 	TeacherMiddleName string
+// 	Discipline        string
+// 	StudentId         int64 `json:"student_id" db:"student_id"`
+// 	StudentEmail      string
+// 	StudentLastName   string
+// 	StudentFirstName  string
+// 	StudentMiddleName string
+// 	Grade             int64
+// }
 
-func convertJoinedQueryToGrade(input userGrade) models.Grade {
-	return models.Grade{
-		Teacher: models.User{
-			Id:         input.TeacherId,
-			Email:      input.TeacherEmail,
-			LastName:   input.TeacherLastName,
-			FirstName:  input.TeacherFirstName,
-			MiddleName: input.TeacherMiddleName,
-		},
-		Discipline: input.Discipline,
-		Student: models.User{
-			Id:         input.StudentId,
-			Email:      input.StudentEmail,
-			LastName:   input.StudentLastName,
-			FirstName:  input.StudentFirstName,
-			MiddleName: input.StudentMiddleName,
-		},
-		Grade: input.Grade,
-	}
-}
+// func convertJoinedQueryToGrade(input userGrade) models.Grade {
+// 	return models.Grade{
+// 		Teacher: models.User{
+// 			Id:         input.TeacherId,
+// 			Email:      input.TeacherEmail,
+// 			LastName:   input.TeacherLastName,
+// 			FirstName:  input.TeacherFirstName,
+// 			MiddleName: input.TeacherMiddleName,
+// 		},
+// 		Discipline: input.Discipline,
+// 		Student: models.User{
+// 			Id:         input.StudentId,
+// 			Email:      input.StudentEmail,
+// 			LastName:   input.StudentLastName,
+// 			FirstName:  input.StudentFirstName,
+// 			MiddleName: input.StudentMiddleName,
+// 		},
+// 		Grade: input.Grade,
+// 	}
+// }
 
 func NewGradesStorage(pool *pgxpool.Pool) *GradesStorage {
 	storage := new(GradesStorage)
@@ -56,12 +56,12 @@ func NewGradesStorage(pool *pgxpool.Pool) *GradesStorage {
 	return storage
 }
 
-func (storage *GradesStorage) StudentAndTeacherChecker(grade models.Grade) bool {
+func (storage *UsersStorage) StudentAndTeacherChecker(teacher_id int64, student_id int64) bool {
 	checkerQuery := `SELECT id FROM users WHERE id = $1`
 
 	var teacherId int64
 
-	err := pgxscan.Get(context.Background(), storage.databasePool, &teacherId, checkerQuery, grade.Teacher.Id)
+	err := pgxscan.Get(context.Background(), storage.databasePool, &teacherId, checkerQuery, teacher_id)
 
 	if err != nil {
 		log.Errorln(err)
@@ -70,7 +70,7 @@ func (storage *GradesStorage) StudentAndTeacherChecker(grade models.Grade) bool 
 
 	var studentId int64
 
-	err = pgxscan.Get(context.Background(), storage.databasePool, &studentId, checkerQuery, grade.Student.Id)
+	err = pgxscan.Get(context.Background(), storage.databasePool, &studentId, checkerQuery, student_id)
 
 	if err != nil {
 		log.Errorln(err)

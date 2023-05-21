@@ -18,9 +18,9 @@ func NewGradesProcessor(storage *db.GradesStorage) *GradesProcessor {
 
 func (processor *GradesProcessor) CreateGrade(grade models.Grade) error {
 
-	if !processor.storage.StudentAndTeacherChecker(grade) {
-		return errors.New("teacher or student with such id's not founded")
-	}
+	// if !processor.storage.StudentAndTeacherChecker(grade.Teacher.Id, grade.Student.Id) {
+	// 	return errors.New("teacher or student with such id's not founded")
+	// }
 	if grade.Discipline == "" {
 		return errors.New("discipline should not be empty")
 	}
