@@ -17,13 +17,17 @@ type GradesStorage struct {
 
 type userGrade struct {
 	GradeId           int64  `db:"gradeid"`
-	TeacherId         int64  `json:"teacher_id" db:"teacher_id"`
+	TeacherId         int64  `json:"teacher_id" db:"t_id"`
+	TeacherEmail      string `json:"t_email" db:"t_email"`
+	TeacherLastName   string `db:"t_last_name"`
+	TeacherFirstName  string `db:"t_first_name"`
+	TeacherMiddleName string `db:"t_middle_name"`
 	Discipline        string `db:"discipline"`
-	StudentId         int64  `json:"student_id" db:"userid"`
-	StudentEmail      string `db:"email"`
-	StudentLastName   string `db:"last_name"`
-	StudentFirstName  string `db:"first_name"`
-	StudentMiddleName string `db:"middle_name"`
+	StudentId         int64  `json:"student_id" db:"s_id"`
+	StudentEmail      string `json:"s_email" db:"s_email"`
+	StudentLastName   string `db:"s_last_name"`
+	StudentFirstName  string `db:"s_first_name"`
+	StudentMiddleName string `db:"s_middle_name"`
 	Grade             int64  `db:"grade"`
 }
 
@@ -31,11 +35,11 @@ func convertJoinedQueryToGrade(input userGrade) models.Grade {
 	return models.Grade{
 		Id: input.GradeId,
 		Teacher: models.User{
-			Id: input.TeacherId,
-			// Email:      input.TeacherEmail,
-			// LastName:   input.TeacherLastName,
-			// FirstName:  input.TeacherFirstName,
-			// MiddleName: input.TeacherMiddleName,
+			Id:         input.TeacherId,
+			Email:      input.TeacherEmail,
+			LastName:   input.TeacherLastName,
+			FirstName:  input.TeacherFirstName,
+			MiddleName: input.TeacherMiddleName,
 		},
 		Discipline: input.Discipline,
 		Student: models.User{
@@ -92,8 +96,11 @@ func (storage *GradesStorage) CreateGrade(grade models.Grade) error {
 	return nil
 }
 
-func (storage *GradesStorage) GetGradesList(student_id int64, disciplineFilter string, gradeFilter int64) []models.Grade {
-	query := `SELECT u.id AS userid, u.email, u.last_name, u.first_name, u.middle_name, g.id AS gradeid, g.teacher_id, g.discipline, g.grade FROM users u JOIN grades g ON u.id=g.student_id WHERE 1=1`
+func (storage *GradesStorage) GetGradesList(student_id int64, teacher_id int64, s_email string, t_email string, disciplineFilter string, gradeFilter int64) []models.Grade {
+	query := `SELECT first.id AS gradeid, first.t_id, first.t_email, first.t_last_name, first.t_first_name, first.t_middle_name, 
+	first.discipline, u.id AS s_id, u.email AS s_email, u.last_name AS s_last_name, u.first_name AS s_first_name, u.middle_name AS s_middle_name, first.grade
+	FROM(SELECT g.id, g.teacher_id, g.discipline, g.student_id, g.grade, u.id AS t_id, u.email AS t_email, u.last_name AS t_last_name, u.first_name AS t_first_name,
+	u.middle_name AS t_middle_name FROM grades g INNER JOIN users u ON u.id=g.teacher_id) AS first INNER JOIN users u ON u.id=first.student_id WHERE 1=1`
 
 	placeholderNum := 1
 	args := make([]interface{}, 0)
@@ -101,6 +108,21 @@ func (storage *GradesStorage) GetGradesList(student_id int64, disciplineFilter s
 	if student_id != 0 {
 		query += fmt.Sprintf(" AND u.id = $%d", placeholderNum)
 		args = append(args, student_id)
+		placeholderNum++
+	}
+	if teacher_id != 0 {
+		query += fmt.Sprintf(" AND t_id = $%d", placeholderNum)
+		args = append(args, teacher_id)
+		placeholderNum++
+	}
+	if s_email != "" {
+		query += fmt.Sprintf(" AND u.email ILIKE $%d", placeholderNum)
+		args = append(args, s_email)
+		placeholderNum++
+	}
+	if t_email != "" {
+		query += fmt.Sprintf(" AND t_email ILIKE $%d", placeholderNum)
+		args = append(args, t_email)
 		placeholderNum++
 	}
 	if disciplineFilter != "" {

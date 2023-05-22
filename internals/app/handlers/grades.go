@@ -54,6 +54,15 @@ func (handler *GradesHandler) List(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+	var teacherIdFilter int64 = 0
+	if vars.Get("teacher_id") != "" {
+		var err error
+		teacherIdFilter, err = strconv.ParseInt(vars.Get("teacher_id"), 10, 64)
+		if err != nil {
+			WrapError(w, err)
+			return
+		}
+	}
 	var gradeFilter int64 = 0
 	if vars.Get("grade") != "" {
 		var err error
@@ -64,7 +73,7 @@ func (handler *GradesHandler) List(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	list, err := handler.processor.ListGrades(studentIdFilter, strings.Trim(vars.Get("discipline"), "\""), gradeFilter)
+	list, err := handler.processor.ListGrades(studentIdFilter, teacherIdFilter, strings.Trim(vars.Get("s_email"), "\""), strings.Trim(vars.Get("t_email"), "\""), strings.Trim(vars.Get("discipline"), "\""), gradeFilter)
 
 	if err != nil {
 		WrapError(w, err)
