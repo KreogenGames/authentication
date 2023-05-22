@@ -39,7 +39,7 @@ func (processor *UsersProcessor) AddNewUser(user models.User) error {
 	if processor.storage.EmailChecker(user.Email) {
 		return errors.New("user with this email already exists")
 	}
-	if user.Role < 1 || user.Role > 2 {
+	if user.Role <= 0 {
 		return errors.New("missing role id")
 	}
 
@@ -51,10 +51,10 @@ func (processor *UsersProcessor) CreateUser(user models.User) error {
 		return errors.New("password should not be empty")
 	}
 	if user.LastName == "" {
-		return errors.New("user's lastName should not be empty")
+		return errors.New("user's last_name should not be empty")
 	}
 	if user.FirstName == "" {
-		return errors.New("user's firstName should not be empty")
+		return errors.New("user's first_name should not be empty")
 	}
 	if !strings.Contains(user.Email, "@edu.mirea.ru") && !strings.Contains(user.Email, "@mirea.ru") {
 		return errors.New("email must be in @edu.mirea.ru or @mirea.ru domain")

@@ -16,28 +16,26 @@ type GradesStorage struct {
 }
 
 type userGrade struct {
-	TeacherId         int64 `json:"teacher_id" db:"userid"`
-	TeacherEmail      string
-	TeacherLastName   string
-	TeacherFirstName  string
-	TeacherMiddleName string
-	Discipline        string
-	StudentId         int64 `json:"student_id" db:"gradeid"`
-	StudentEmail      string
-	StudentLastName   string
-	StudentFirstName  string
-	StudentMiddleName string
-	Grade             int64
+	GradeId           int64  `db:"gradeid"`
+	TeacherId         int64  `json:"teacher_id" db:"teacher_id"`
+	Discipline        string `db:"discipline"`
+	StudentId         int64  `json:"student_id" db:"userid"`
+	StudentEmail      string `db:"email"`
+	StudentLastName   string `db:"last_name"`
+	StudentFirstName  string `db:"first_name"`
+	StudentMiddleName string `db:"middle_name"`
+	Grade             int64  `db:"grade"`
 }
 
 func convertJoinedQueryToGrade(input userGrade) models.Grade {
 	return models.Grade{
+		Id: input.GradeId,
 		Teacher: models.User{
-			Id:         input.TeacherId,
-			Email:      input.TeacherEmail,
-			LastName:   input.TeacherLastName,
-			FirstName:  input.TeacherFirstName,
-			MiddleName: input.TeacherMiddleName,
+			Id: input.TeacherId,
+			// Email:      input.TeacherEmail,
+			// LastName:   input.TeacherLastName,
+			// FirstName:  input.TeacherFirstName,
+			// MiddleName: input.TeacherMiddleName,
 		},
 		Discipline: input.Discipline,
 		Student: models.User{
@@ -94,15 +92,15 @@ func (storage *GradesStorage) CreateGrade(grade models.Grade) error {
 	return nil
 }
 
-func (storage *GradesStorage) GetGradesList(studentEmailFilter string, disciplineFilter string, gradeFilter int64) []models.Grade {
-	query := `SELECT users.id AS userid, users.email, users.lastName, users.firstName, users.middleName, grades.id AS gradeid, grades.discipline, grades.grade FROM users JOIN grades g on users.id = g.student_id WHERE 1=1`
+func (storage *GradesStorage) GetGradesList(student_id int64, disciplineFilter string, gradeFilter int64) []models.Grade {
+	query := `SELECT u.id AS userid, u.email, u.last_name, u.first_name, u.middle_name, g.id AS gradeid, g.teacher_id, g.discipline, g.grade FROM users u JOIN grades g ON u.id=g.student_id WHERE 1=1`
 
 	placeholderNum := 1
 	args := make([]interface{}, 0)
 
-	if studentEmailFilter != "" {
-		query += fmt.Sprintf(" AND users.id = $%d", placeholderNum)
-		args = append(args, studentEmailFilter)
+	if student_id != 0 {
+		query += fmt.Sprintf(" AND u.id = $%d", placeholderNum)
+		args = append(args, student_id)
 		placeholderNum++
 	}
 	if disciplineFilter != "" {
@@ -111,14 +109,14 @@ func (storage *GradesStorage) GetGradesList(studentEmailFilter string, disciplin
 		placeholderNum++
 	}
 	if gradeFilter != 0 {
-		query += fmt.Sprintf(" AND grade ILIKE $%d", placeholderNum)
+		query += fmt.Sprintf(" AND grade = $%d", placeholderNum)
 		args = append(args, gradeFilter)
 		placeholderNum++
 	}
 
 	var dbResult []userGrade
 
-	err := pgxscan.Get(context.Background(), storage.databasePool, &dbResult, query, args...)
+	err := pgxscan.Select(context.Background(), storage.databasePool, &dbResult, query, args...)
 	if err != nil {
 		log.Errorln(err)
 	}

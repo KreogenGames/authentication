@@ -45,7 +45,7 @@ func (storage *UsersStorage) AddNewUser(newUser models.User) error {
 
 func (storage *UsersStorage) CreateUser(user models.User) error {
 	// query := "INSERT INTO users (password, lastName, firstName, middleName, phoneNumber) VALUES ($1, $2, $3, $4, $5) WHERE email = $6"
-	query := `UPDATE users SET "hashed_pass" = $1, "lastName" = $2, "firstName" = $3, "middleName" = $4, "phoneNumber" = $5 WHERE "email" = $6`
+	query := `UPDATE users SET "hashed_pass" = $1, "last_name" = $2, "first_name" = $3, "middle_name" = $4, "phone_number" = $5 WHERE "email" = $6`
 
 	_, err := storage.databasePool.Exec(context.Background(), query, user.Hashed_Pass, user.LastName, user.FirstName, user.MiddleName, user.PhoneNumber, user.Email)
 
@@ -111,17 +111,17 @@ func (storage *UsersStorage) GetUsersListByParams(email string, lastName string,
 		placeholderNum++
 	}
 	if lastName != "" {
-		query += fmt.Sprintf(` AND "lastName" ILIKE $%d`, placeholderNum)
+		query += fmt.Sprintf(` AND "last_name" ILIKE $%d`, placeholderNum)
 		args = append(args, fmt.Sprintf("%%%s%%", lastName))
 		placeholderNum++
 	}
 	if firstName != "" {
-		query += fmt.Sprintf(` AND "firstName" ILIKE $%d`, placeholderNum)
+		query += fmt.Sprintf(` AND "first_name" ILIKE $%d`, placeholderNum)
 		args = append(args, fmt.Sprintf("%%%s%%", firstName))
 		placeholderNum++
 	}
 	if middleName != "" {
-		query += fmt.Sprintf(` AND "middleName" ILIKE $%d`, placeholderNum)
+		query += fmt.Sprintf(` AND "middle_name" ILIKE $%d`, placeholderNum)
 		args = append(args, fmt.Sprintf("%%%s%%", middleName))
 		placeholderNum++
 	}

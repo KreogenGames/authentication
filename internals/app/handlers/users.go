@@ -158,22 +158,6 @@ func (handler *UsersHandler) ListByParams(w http.ResponseWriter, r *http.Request
 }
 
 func (handler *UsersHandler) UpdateUserPass(w http.ResponseWriter, r *http.Request) {
-	// vars := mux.Vars(r)
-
-	// if vars["email"] == "" {
-	// 	WrapError(w, errors.New("missing email"))
-	// 	return
-	// }
-
-	// email := vars["email"]
-
-	// if vars["hashed_pass"] == "" {
-	// 	WrapError(w, errors.New("missing new password"))
-	// 	return
-	// }
-
-	// newPass := vars["hashed_pass"]
-
 	var emailAndNewPass models.User
 
 	err := json.NewDecoder(r.Body).Decode(&emailAndNewPass)

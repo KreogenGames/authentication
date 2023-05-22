@@ -11,10 +11,10 @@ CREATE TABLE IF NOT EXISTS "users" (
     "id" SERIAL,
     "email" TEXT NOT NULL UNIQUE,
     "hashed_pass" varchar(255) UNIQUE,
-    "lastName" varchar(50),
-    "firstName" varchar(50),
-    "middleName" varchar(50),
-    "phoneNumber" TEXT,
+    "last_name" varchar(50),
+    "first_name" varchar(50),
+    "middle_name" varchar(50),
+    "phone_number" TEXT,
 	"role" INTEGER NOT NULL REFERENCES roles (id),
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -40,7 +40,7 @@ insert into public.roles (role_name, access_level) values ('user', 0);
 insert into public.roles (role_name, access_level) values ('admin', 10);
 insert into public.roles (role_name, access_level) values ('student', 1);
 
-insert into public.users (email, role) values ('sibgatulov@gmail.com', 1);
-insert into public.users (email, role) values ('ertek.h.i@edu.mirea.ru', 2);
+insert into public.users (email, role) values ('sibgatulov@gmail.com', 2);
+insert into public.users (email, role) values ('ertek.h.i@edu.mirea.ru', 3);
 
 -- insert into public.grades (teacher_id, discipline, student_id, grade) values (3, 'ОСТ', 2, 3);
