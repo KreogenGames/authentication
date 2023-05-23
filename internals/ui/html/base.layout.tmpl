@@ -1,0 +1,29 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{ template "title" .}}</title>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="container">
+			<div class="header">
+				<h1><a href="/">Electro Student</a></h1>
+			</div>
+			<div class="nav">
+				<a href="/">Главная</a>
+			</div>
+			<div class="main">
+				{{ template "main" .}}
+			</div>
+			<div class="footer">
+				{{ template "footer" .}}
+			</div>			
+		</div>
+	</div>
+</body>
+</html>
+{{end}}

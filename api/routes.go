@@ -10,6 +10,8 @@ func CreateRoutes(userHandler *handlers.UsersHandler, roleHandler *handlers.Role
 
 	r := mux.NewRouter()
 
+	r.HandleFunc("/", handlers.HomePage)
+
 	r.HandleFunc("/admin/add/user", userHandler.AddNewUser).Methods("POST")
 
 	r.HandleFunc("/admin/add/role", roleHandler.AddNewRole).Methods("POST")
