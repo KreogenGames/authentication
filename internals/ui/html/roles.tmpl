@@ -1,0 +1,16 @@
+{{template "base" .}}
+
+{{define "title"}}Ролевая панель{{end}}
+
+{{define "main"}}
+	<h1>Поиск роли по Id</h1>
+		{{if .Id}}
+			<div>
+				<p>ID: {{ .Id }}</p>
+				<p>Название роли: {{ .RoleName }}</p>
+				<p>Уровень доступа: {{ .AccessLevel }}</p>
+			</div>
+		{{else}}
+			<div>Пользователь с таким Id не существует</div>
+		{{end}}
+{{end}}

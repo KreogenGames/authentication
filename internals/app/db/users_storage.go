@@ -21,7 +21,7 @@ func NewUsersStorage(pool *pgxpool.Pool) *UsersStorage {
 }
 
 func (storage *UsersStorage) EmailChecker(email string) bool {
-	checkerQuery := `SELECT * FROM users WHERE "email" = $1`
+	checkerQuery := `SELECT email FROM users WHERE "email" = $1`
 
 	var checker models.User
 

@@ -29,7 +29,6 @@ func (processor *UsersProcessor) GeneratePasswordHash(password string) string {
 }
 
 func (processor *UsersProcessor) AddNewUser(user models.User) error {
-
 	if user.Email == "" {
 		return errors.New("email should not be empty")
 	}

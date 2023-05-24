@@ -17,6 +17,12 @@ func CreateRoutes(userHandler *handlers.UsersHandler, roleHandler *handlers.Role
 
 	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", fileServer))
 
+	r.HandleFunc("/admin", handlers.AdminPage)
+
+	r.HandleFunc("/admin/roles", handlers.RoleStatPage)
+
+	r.HandleFunc("/admin/users", handlers.UserStatPage)
+
 	r.HandleFunc("/admin/add/user", userHandler.AddNewUser).Methods("POST") //На страницу админа
 
 	r.HandleFunc("/admin/add/role", roleHandler.AddNewRole).Methods("POST") //На страницу админа

@@ -1,0 +1,24 @@
+{{template "base" .}}
+
+{{define "title"}}Панель пользователей{{end}}
+
+{{define "main"}}
+	<h1>Поиск пользователя по Id</h1>
+		{{if .Id}}
+			<div>
+				<p>ID: {{ .Id }}</p>
+				<p>Электронная почта: {{ .Email }}</p>
+				<p>Фамилия: {{ .LastName }}</p>
+				<p>Имя: {{ .FirstName }}</p>
+				<p>Отчество: {{ .MiddleName }}</p>
+				{{if .PhoneNumber}}
+					<p>Номер телефона: {{ .PhoneNumber }}</p>
+				{{else}}
+					<p>Номер телефона: Не указан</p>
+				{{end}}
+				<p>Роль: {{ .Role }}</p>
+			</div>
+		{{else}}
+			<div>Пользователь с таким Id не существует</div>
+		{{end}}
+{{end}}
