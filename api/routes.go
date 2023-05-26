@@ -19,17 +19,17 @@ func CreateRoutes(userHandler *handlers.UsersHandler, roleHandler *handlers.Role
 
 	r.HandleFunc("/admin", handlers.AdminPage)
 
-	r.HandleFunc("/admin/roles", handlers.RoleStatPage)
+	r.HandleFunc("/admin/roles", roleHandler.RoleStatPage)
 
-	r.HandleFunc("/admin/users", handlers.UserStatPage)
+	r.HandleFunc("/admin/users", userHandler.UserStatPage)
 
-	r.HandleFunc("/admin/add/user", userHandler.AddNewUser).Methods("POST") //На страницу админа
+	r.HandleFunc("/admin/add/user", userHandler.AddNewUser).Methods("POST")
 
-	r.HandleFunc("/admin/add/role", roleHandler.AddNewRole).Methods("POST") //На страницу админа
+	r.HandleFunc("/admin/add/role", roleHandler.AddNewRole).Methods("POST")
 
 	r.HandleFunc("/admin/find/role/{id:[0-9]+}", roleHandler.FindRoleById).Methods("GET")
 
-	r.HandleFunc("/admin/list/roles", roleHandler.ListRoles).Methods("GET") //На страницу админа
+	r.HandleFunc("/admin/list/roles", roleHandler.ListRoles).Methods("GET")
 
 	r.HandleFunc("/users/create", userHandler.Create).Methods("POST") //На страницу регистрации
 

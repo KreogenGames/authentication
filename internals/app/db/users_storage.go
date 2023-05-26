@@ -99,6 +99,25 @@ func (storage *UsersStorage) GetUsersList() []models.User {
 	return result
 }
 
+func (storage *UsersStorage) GetUsersSlice() []*models.User {
+	query := `SELECT * FROM users`
+
+	var result []models.User
+
+	err := pgxscan.Select(context.Background(), storage.databasePool, &result, query)
+
+	if err != nil {
+		log.Errorln(err)
+	}
+
+	var userSlice []*models.User
+	for i := range result {
+		userSlice = append(userSlice, &result[i])
+	}
+
+	return userSlice
+}
+
 func (storage *UsersStorage) GetUsersListByParams(email string, lastName string, firstName string, middleName string) []models.User {
 	query := `SELECT * FROM users WHERE 1=1`
 

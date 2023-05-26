@@ -1,0 +1,21 @@
+{{template "base" .}}
+
+{{define "title"}}Ролевая панель{{end}}
+
+{{define "main"}}
+	<h1>Список ролей</h1>
+		<table class="roles">
+			<tr>
+        		<th>ID</th>
+				<th>Название</th>
+				<th>Уровень доступа</th>
+        	</tr>
+			{{range .Roles}}
+				<tr>
+					<td>{{.Id}}</td>
+        			<td>{{.RoleName}}</td>
+        			<td>{{.AccessLevel}}</td>					
+				</tr>
+			{{end}}
+		</table>
+{{end}}

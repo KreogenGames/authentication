@@ -5,7 +5,6 @@ import (
 	"electro_student/auth/internals/app/processors"
 	"encoding/json"
 	"errors"
-	"html/template"
 	"net/http"
 	"strconv"
 
@@ -61,27 +60,10 @@ func (handler *RolesHandler) FindRoleById(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	role, _ := handler.processor.FindRoleById(id)
-	// if err != nil {
-	// 	WrapError(w, err)
-	// 	return
-	// }
-
-	files := []string{
-		"./internals/ui/html/admin.panel.tmpl",
-		"./internals/ui/html/base.layout.tmpl",
-		"./internals/ui/html/footer.partial.tmpl",
-	}
-
-	ts, err := template.ParseFiles(files...)
+	role, err := handler.processor.FindRoleById(id)
 	if err != nil {
 		WrapError(w, err)
 		return
-	}
-
-	err = ts.Execute(w, role)
-	if err != nil {
-		WrapError(w, err)
 	}
 
 	var m = map[string]interface{}{
@@ -97,23 +79,6 @@ func (handler *RolesHandler) ListRoles(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		WrapError(w, err)
 		return
-	}
-
-	files := []string{
-		"./internals/ui/html/admin.panel.tmpl",
-		"./internals/ui/html/base.layout.tmpl",
-		"./internals/ui/html/footer.partial.tmpl",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		WrapError(w, err)
-		return
-	}
-
-	err = ts.Execute(w, list)
-	if err != nil {
-		WrapError(w, err)
 	}
 
 	var m = map[string]interface{}{

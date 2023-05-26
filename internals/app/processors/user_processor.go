@@ -87,6 +87,10 @@ func (processor *UsersProcessor) ListUsers() ([]models.User, error) {
 	return processor.storage.GetUsersList(), nil
 }
 
+func (processor *UsersProcessor) SliceUsers() []*models.User {
+	return processor.storage.GetUsersSlice()
+}
+
 func (processor *UsersProcessor) ListUsersByParams(email string, lastName string, firstName string, middleName string) ([]models.User, error) {
 	return processor.storage.GetUsersListByParams(email, lastName, firstName, middleName), nil
 }

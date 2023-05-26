@@ -9,5 +9,4 @@ type User struct {
 	MiddleName  string `json:"middleName" db:"middle_name"`
 	PhoneNumber string `json:"phoneNumber" db:"phone_number"`
 	Role        int64  `json:"role" db:"role"`
-	//Role        Role   `json:"role"`
 }

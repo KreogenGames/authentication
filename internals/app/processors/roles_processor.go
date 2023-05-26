@@ -48,3 +48,7 @@ func (processor *RolesProcessor) FindRoleById(id int64) (models.Role, error) {
 func (processor *RolesProcessor) ListRoles() ([]models.Role, error) {
 	return processor.storage.GetRolesList(), nil
 }
+
+func (processor *RolesProcessor) SliceRoles() []*models.Role {
+	return processor.storage.GetRolesSlice()
+}

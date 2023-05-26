@@ -40,24 +40,72 @@ body {
 	padding-bottom: 27px;
 }
 
+a {
+	text-decoration: none;
+}
+
 .nav {
-	padding-top: 17px;
-	padding-bottom: 15px;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+}
+
+.nav a {
+	margin-right: 1rem;
 }
 
 .main {
     min-height: calc(100vh - 200px);
 	height: auto;
     overflow: auto;
+	padding-top: 1rem;
+	padding-left: 0px;
+	padding-right: 0px;
+	text-align: center;
 }
 
 .footer {
 	border-top: 1px solid #E4E5E7;
-	padding-top: 17px;
-	padding-bottom: 15px;
+	padding-top: 15px;
+	padding-bottom: 0.7rem;
 	margin-bottom: 0;
 	background: #F7F9FA;
 	/* height: 100%; */
 	color: #6A6C6F;
 	text-align: center;
+}
+
+.users {
+	border-collapse: collapse;
+	border: 1px solid black;
+	margin: auto;
+	margin-top: 1rem;
+}
+
+.users th {
+	border: 1px solid black;
+	margin-top: 2rem;
+	padding: 1rem;
+}
+
+.users td {
+	border: 1px solid black;
+	padding: 1rem;
+}
+
+.roles {
+	border-collapse: collapse;
+	border: 1px solid black;
+	margin: auto;
+	margin-top: 1rem;
+}
+
+.roles th {
+	border: 1px solid black;
+	margin-top: 2rem;
+	padding: 1rem;
+}
+
+.roles td {
+	border: 1px solid black;
+	padding: 1rem;
 }

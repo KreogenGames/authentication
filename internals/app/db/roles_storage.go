@@ -76,3 +76,22 @@ func (storage *RolesStorage) GetRolesList() []models.Role {
 
 	return result
 }
+
+func (storage *RolesStorage) GetRolesSlice() []*models.Role {
+	query := `SELECT * FROM roles`
+
+	var result []models.Role
+
+	err := pgxscan.Select(context.Background(), storage.databasePool, &result, query)
+
+	if err != nil {
+		log.Errorln(err)
+	}
+
+	var roleSlice []*models.Role
+	for i := range result {
+		roleSlice = append(roleSlice, &result[i])
+	}
+
+	return roleSlice
+}
