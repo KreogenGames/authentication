@@ -151,3 +151,64 @@ func (storage *GradesStorage) GetGradesList(student_id int64, teacher_id int64, 
 
 	return result
 }
+
+func (storage *GradesStorage) GetGradesSlice(student_id int64, teacher_id int64, s_email string, t_email string, disciplineFilter string, gradeFilter int64) []*models.Grade {
+	query := `SELECT first.id AS gradeid, first.t_id, first.t_email, first.t_last_name, first.t_first_name, first.t_middle_name, 
+	first.discipline, u.id AS s_id, u.email AS s_email, u.last_name AS s_last_name, u.first_name AS s_first_name, u.middle_name AS s_middle_name, first.grade
+	FROM(SELECT g.id, g.teacher_id, g.discipline, g.student_id, g.grade, u.id AS t_id, u.email AS t_email, u.last_name AS t_last_name, u.first_name AS t_first_name,
+	u.middle_name AS t_middle_name FROM grades g INNER JOIN users u ON u.id=g.teacher_id) AS first INNER JOIN users u ON u.id=first.student_id WHERE 1=1`
+
+	placeholderNum := 1
+	args := make([]interface{}, 0)
+
+	if student_id != 0 {
+		query += fmt.Sprintf(" AND u.id = $%d", placeholderNum)
+		args = append(args, student_id)
+		placeholderNum++
+	}
+	if teacher_id != 0 {
+		query += fmt.Sprintf(" AND t_id = $%d", placeholderNum)
+		args = append(args, teacher_id)
+		placeholderNum++
+	}
+	if s_email != "" {
+		query += fmt.Sprintf(" AND u.email ILIKE $%d", placeholderNum)
+		args = append(args, s_email)
+		placeholderNum++
+	}
+	if t_email != "" {
+		query += fmt.Sprintf(" AND t_email ILIKE $%d", placeholderNum)
+		args = append(args, t_email)
+		placeholderNum++
+	}
+	if disciplineFilter != "" {
+		query += fmt.Sprintf(" AND discipline ILIKE $%d", placeholderNum)
+		args = append(args, disciplineFilter)
+		placeholderNum++
+	}
+	if gradeFilter != 0 {
+		query += fmt.Sprintf(" AND grade = $%d", placeholderNum)
+		args = append(args, gradeFilter)
+		placeholderNum++
+	}
+
+	var dbResult []userGrade
+
+	err := pgxscan.Select(context.Background(), storage.databasePool, &dbResult, query, args...)
+	if err != nil {
+		log.Errorln(err)
+	}
+
+	result := make([]models.Grade, len(dbResult))
+
+	for idx, dbEntity := range dbResult {
+		result[idx] = convertJoinedQueryToGrade(dbEntity)
+	}
+
+	var gradeSlice []*models.Grade
+	for i := range result {
+		gradeSlice = append(gradeSlice, &result[i])
+	}
+
+	return gradeSlice
+}

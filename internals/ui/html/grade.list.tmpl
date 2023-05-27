@@ -1,0 +1,37 @@
+{{template "base" .}}
+
+{{define "title"}}Оценки{{end}}
+
+{{define "main"}}
+	<h1>Список оценок</h1>
+		<table class="grades">
+			<tr>
+        		<th>ID</th>
+				<th>ФИО Преподавателя</th>
+				<th>Почта Преподавателя</th>
+				<th>Дисциплина</th>
+				<th>ФИО Обучающегося</th>
+				<th>Почта Обучающегося</th>
+				<th>Оценка</th>
+        	</tr>
+			{{range .Grades}}
+				<tr>
+					<td>{{.Id}}</td>
+						<td>
+							{{.Teacher.LastName}} 
+							{{.Teacher.FirstName}}
+							{{.Teacher.MiddleName}}
+						</td>
+						<td>{{.Teacher.Email}}</td>
+        			<td>{{.Discipline}}</td>
+						<td>
+							{{.Student.LastName}} 
+							{{.Student.FirstName}}
+							{{.Student.MiddleName}}
+						</td>
+						<td>{{.Student.Email}}</td>
+					<td>{{.Grade}}</td>					
+				</tr>
+			{{end}}
+		</table>
+{{end}}

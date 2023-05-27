@@ -23,6 +23,8 @@ func CreateRoutes(userHandler *handlers.UsersHandler, roleHandler *handlers.Role
 
 	r.HandleFunc("/admin/users", userHandler.UserStatPage)
 
+	r.HandleFunc("/admin/grades", gradesHandler.GradesStatPage)
+
 	r.HandleFunc("/admin/add/user", userHandler.AddNewUser).Methods("POST")
 
 	r.HandleFunc("/admin/add/role", roleHandler.AddNewRole).Methods("POST")

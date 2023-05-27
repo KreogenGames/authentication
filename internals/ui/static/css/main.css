@@ -30,7 +30,7 @@ body {
 
 .header, .nav, .main, .footer {
 	width: 100%;
-	border: 2px solid black; 
+	/* border: 2px solid black;  */
 	padding: 2px calc((100% - 800px) / 2);
 	padding-bottom: 0px;
 }
@@ -42,11 +42,16 @@ body {
 
 a {
 	text-decoration: none;
+	/* height: 100%; */
+	color: #6A6C6F;
 }
 
 .nav {
 	padding-top: 1rem;
 	padding-bottom: 1rem;
+	background: #F7F9FA;
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;
 }
 
 .nav a {
@@ -64,9 +69,9 @@ a {
 }
 
 .footer {
-	border-top: 1px solid #E4E5E7;
+	border-top: 2px solid black;
 	padding-top: 15px;
-	padding-bottom: 0.7rem;
+	padding-bottom: 0.85rem;
 	margin-bottom: 0;
 	background: #F7F9FA;
 	/* height: 100%; */
@@ -106,6 +111,24 @@ a {
 }
 
 .roles td {
+	border: 1px solid black;
+	padding: 1rem;
+}
+
+.grades {
+	border-collapse: collapse;
+	border: 1px solid black;
+	margin: auto;
+	margin-top: 1rem;
+}
+
+.grades th {
+	border: 1px solid black;
+	margin-top: 2rem;
+	padding: 1rem;
+}
+
+.grades td {
 	border: 1px solid black;
 	padding: 1rem;
 }

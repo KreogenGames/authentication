@@ -34,6 +34,11 @@ func (processor *GradesProcessor) CreateGrade(grade models.Grade) error {
 func (processor *GradesProcessor) ListGrades(student_id int64, teacher_id int64, s_email string,
 	t_email string, disciplineFilter string, gradeFilter int64) ([]models.Grade, error) {
 
-	return processor.storage.GetGradesList(student_id, teacher_id, s_email,
-		t_email, disciplineFilter, gradeFilter), nil
+	return processor.storage.GetGradesList(student_id, teacher_id, s_email, t_email, disciplineFilter, gradeFilter), nil
+}
+
+func (processor *GradesProcessor) SliceGrades(student_id int64, teacher_id int64, s_email string,
+	t_email string, disciplineFilter string, gradeFilter int64) []*models.Grade {
+
+	return processor.storage.GetGradesSlice(student_id, teacher_id, s_email, t_email, disciplineFilter, gradeFilter)
 }
